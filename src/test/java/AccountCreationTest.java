@@ -4,45 +4,60 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class AccountCreationTest {
 
     @Test
     void createAccount() {
-        // Setup ChromeDriver using WebDriverManager
+
+        final String name = "Juan";
+        final String lastName = "Velez";
+        final String email = "juan01@email.com";
+        final String password = "H3ll0@22W0rld";
+
         WebDriver driver = new ChromeDriver();
 
-        // Step 1: Navigate to the website
         driver.get("https://teststore.automationtesting.co.uk/index.php");
 
-        // Step 2: Click on "Sign In"
         WebElement signInButton = driver.findElement(By.xpath("//a[contains(@title, 'Log in')]"));
         signInButton.click();
 
-        // Step 3: Click on "No account? Create one here"
         WebElement createAccountLink = driver.findElement(By.xpath("//a[contains(text(),'Create one here')]"));
         createAccountLink.click();
 
         WebElement gender = driver.findElement(By.xpath("//label[contains(text(), 'Social')]//following-sibling::div//input[@name='id_gender']"));
         gender.click();
 
-        WebElement firstNameField = driver.findElement(By.xpath("//input[@name='firstName']"));
-        firstNameField.sendKeys("John");
+        WebElement firstNameField = driver.findElement(By.xpath("//form[@id='customer-form']//input[@id='field-firstname']"));
+        firstNameField.sendKeys(name);
 
-        WebElement lastNameField = driver.findElement(By.xpath("//input[@name='lastName']"));
-        lastNameField.sendKeys("Doe");
+        WebElement lastNameField = driver.findElement(By.xpath("//form[@id='customer-form']//input[@id='field-lastname']"));
+        lastNameField.sendKeys(lastName);
 
-        WebElement emailField = driver.findElement(By.xpath("//input[@name='email']"));
-        emailField.sendKeys("johndoe@example.com");
+        WebElement emailField = driver.findElement(By.xpath("//form[@id='customer-form']//input[@id='field-email']"));
+        emailField.sendKeys(email);
 
-        WebElement passwordField = driver.findElement(By.xpath("//input[@name='password']"));
-        passwordField.sendKeys("SecurePassword123");
+        WebElement passwordField = driver.findElement(By.xpath("//form[@id='customer-form']//input[@id='field-password']"));
+        passwordField.sendKeys(password);
 
-        // Step 5: Click the "Save" button using RelativeLocator (Selenium 4.25 feature)
-        WebElement saveButton = driver.findElement(By.xpath("//button[@type='submit']"));
+        WebElement offers = driver.findElement(By.xpath("//form[@id='customer-form']//div[contains(@class, 'form-group')]//input[@name='optin']"));
+        offers.click();
+
+        WebElement terms = driver.findElement(By.xpath("//form[@id='customer-form']//div[contains(@class, 'form-group')]//input[@name='psgdpr']"));
+        terms.click();
+
+        WebElement newsLetter = driver.findElement(By.xpath("//form[@id='customer-form']//div[contains(@class, 'form-group')]//input[@name='newsletter']"));
+        newsLetter.click();
+
+        WebElement saveButton = driver.findElement(By.xpath("//form[@id='customer-form']/footer/button[@type='submit']"));
         saveButton.click();
 
-        // Close the browser after the test
+        WebElement profileName = driver.findElement(By.xpath("//div[@id=\"_desktop_user_info\"]/div/a[2]/span"));
+
+        assertEquals(name + " " + lastName, profileName.getText());
+
         driver.quit();
     }
 }
